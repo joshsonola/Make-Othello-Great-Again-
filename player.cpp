@@ -53,23 +53,27 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
     // If there are no possible moves, return NULL
     if (!curr_board->hasMoves(curr_side))
 		return NULL;
-    
-    // Obtain a vector of all possible moves
-    std::vector<Move *> possible_moves;
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
-            Move move(i, j);
-            if (curr_board->checkMove(&move, curr_side)) {
-				possible_moves.push_back(new Move(i, j));
-			}       
-        }
-    }
-    // Use the Heuristic procedure to find a move to make
-    Move * final_move = Heuristic(possible_moves);
-    
-    // Still need to delete all the moves in possible_moves vector
-    curr_board->doMove(final_move, curr_side);
-    return final_move;
+    if (testingMinimax) {
+		
+	}
+	else {
+		// Obtain a vector of all possible moves
+		std::vector<Move *> possible_moves;
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				Move move(i, j);
+				if (curr_board->checkMove(&move, curr_side)) {
+					possible_moves.push_back(new Move(i, j));
+				}       
+			}
+		}
+		// Use the Heuristic procedure to find a move to make
+		Move * final_move = Heuristic(possible_moves);
+		
+		// Still need to delete all the moves in possible_moves vector
+		curr_board->doMove(final_move, curr_side);
+		return final_move;
+	}
 }
 
 Move * Player::Heuristic(std::vector<Move *> possible_moves) {
