@@ -108,15 +108,11 @@ int Player::Heuristic(Move * curr_move) {
 		(curr_x == 7 && curr_y == 0) && (curr_x == 7 && curr_y == 7)) 
 	{
 			score *= 3;
-			delete copy_board;
-			return score;
 	}
 	else if ((curr_x == 0 && curr_y == 0) && (curr_x == 0 && curr_y == 7) &&
 		(curr_x == 7 && curr_y == 0) && (curr_x == 7 && curr_y == 7)) 
 	{
 			score *= -3;
-			delete copy_board;
-			return score;
 	}	
 	delete copy_board;
 	return score;
