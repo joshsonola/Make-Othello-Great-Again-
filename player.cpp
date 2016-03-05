@@ -23,6 +23,7 @@ Player::Player(Side side) {
  */
 Player::~Player() {
 	// Mojo was here
+    // vinci was also here
 	delete curr_board;
 }
 
