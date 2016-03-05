@@ -64,25 +64,28 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
 			}       
         }
     }
+    // Use theHeuristic procedure to find a move to make
+    Move * final_move = Heuristic(possible_moves);
     
-    Move * final_move;
-    
-    int max_score = Heuristic(possible_moves[0]);
-    unsigned int max_index = 0;
-    int score;
-    for (unsigned int i = 1; i < possible_moves.size(); i++) {
-		score = Heuristic(possible_moves[i]);
-		if (score > max_score) {
-			max_index = i;
-		}
-	}
-	final_move = possible_moves[max_index];
     // Still need to delete all the moves in possible_moves vector
     curr_board->doMove(final_move, curr_side);
     return final_move;
 }
 
-int Player::Heuristic(Move * curr_move) {
+Move * Player::Heuristic(std::vector<Move *> possible_moves) {
+	int max_score = HeuristicValue(possible_moves[0]);
+    unsigned int max_index = 0;
+    int score;
+    for (unsigned int i = 1; i < possible_moves.size(); i++) {
+		score = HeuristicValue(possible_moves[i]);
+		if (score > max_score) {
+			max_index = i;
+		}
+	}
+	return possible_moves[max_index];
+}
+
+int Player::HeuristicValue(Move * curr_move) {
 	// Perform the move on a copy of the game board to determine the 
 	// score
 	Board * copy_board = curr_board->copy();
@@ -96,25 +99,27 @@ int Player::Heuristic(Move * curr_move) {
 	int score = copy_board->count(curr_side) - copy_board->count(other);
 	
 	// Store variables for current moves
-	curr_x = curr_move->getX();
-	curr_y = curr_move->getY();
+	int curr_x = curr_move->getX();
+	int curr_y = curr_move->getY();
 	
 	// Multiply by a modifier based on the location of the move
 	Move corner_moves[] = {Move(0, 0), Move(0, 7), Move(7, 0), Move(7, 7)}; 
 	Move adjacent_corner_moves[] = {Move(0, 1), Move(1, 0), Move(1, 7), 
 		Move(0, 6), Move(6, 0), Move(7, 1), Move(6, 7), Move( 7, 6)}; 
-	
 
 	if ((curr_x == 0 && curr_y == 0) && (curr_x == 0 && curr_y == 7) &&
 		(curr_x == 7 && curr_y == 0) && (curr_x == 7 && curr_y == 7)) 
 	{
 			score *= 3;
 	}
-	else if ((curr_x == 0 && curr_y == 0) && (curr_x == 0 && curr_y == 7) &&
-		(curr_x == 7 && curr_y == 0) && (curr_x == 7 && curr_y == 7)) 
+	else if ((curr_x == 1 && curr_y == 0) && (curr_x == 0 && curr_y == 1) &&  
+		(curr_x == 0 && curr_y == 6) && (curr_x == 1 && curr_y == 7) && 
+		(curr_x == 7 && curr_y == 1) && (curr_x == 6 && curr_y == 0) && 
+		(curr_x == 6 && curr_y == 7) && (curr_x == 7 && curr_y == 6)) 
 	{
 			score *= -3;
 	}	
+	
 	delete copy_board;
 	return score;
 }
