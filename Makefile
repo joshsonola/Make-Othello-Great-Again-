@@ -3,7 +3,7 @@ CFLAGS      = -Wall -ansi -pedantic -ggdb
 OBJS        = player.o board.o
 PLAYERNAME  = player
 
-all: $(PLAYERNAME) testgame
+all: $(PLAYERNAME) Make Othello Great Again!
 	
 $(PLAYERNAME): $(OBJS) wrapper.o
 	$(CC) -o $@ $^
