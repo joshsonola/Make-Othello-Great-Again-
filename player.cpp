@@ -64,7 +64,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
 			}       
         }
     }
-    // Use theHeuristic procedure to find a move to make
+    // Use the Heuristic procedure to find a move to make
     Move * final_move = Heuristic(possible_moves);
     
     // Still need to delete all the moves in possible_moves vector
@@ -103,23 +103,29 @@ int Player::HeuristicValue(Move * curr_move) {
 	int curr_y = curr_move->getY();
 	
 	// Multiply by a modifier based on the location of the move
-	Move corner_moves[] = {Move(0, 0), Move(0, 7), Move(7, 0), Move(7, 7)}; 
-	Move adjacent_corner_moves[] = {Move(0, 1), Move(1, 0), Move(1, 7), 
-		Move(0, 6), Move(6, 0), Move(7, 1), Move(6, 7), Move( 7, 6)}; 
-
-	if ((curr_x == 0 && curr_y == 0) && (curr_x == 0 && curr_y == 7) &&
-		(curr_x == 7 && curr_y == 0) && (curr_x == 7 && curr_y == 7)) 
+	if ((curr_x == 0 && curr_y == 0) || (curr_x == 0 && curr_y == 7) ||
+		(curr_x == 7 && curr_y == 0) || (curr_x == 7 && curr_y == 7)) 
 	{
-			score *= 3;
+		
+		score *= 3;
 	}
-	else if ((curr_x == 1 && curr_y == 0) && (curr_x == 0 && curr_y == 1) &&  
-		(curr_x == 0 && curr_y == 6) && (curr_x == 1 && curr_y == 7) && 
-		(curr_x == 7 && curr_y == 1) && (curr_x == 6 && curr_y == 0) && 
-		(curr_x == 6 && curr_y == 7) && (curr_x == 7 && curr_y == 6)) 
+	else if ((curr_x == 1 && curr_y == 0) || (curr_x == 0 && curr_y == 1) ||  
+		(curr_x == 0 && curr_y == 6) || (curr_x == 1 && curr_y == 7) || 
+		(curr_x == 7 && curr_y == 1) || (curr_x == 6 && curr_y == 0) ||
+		(curr_x == 6 && curr_y == 7) || (curr_x == 7 && curr_y == 6) ||
+		(curr_x == 1 && curr_y == 1) || (curr_x == 6 && curr_y == 6) || 
+		(curr_x == 1 && curr_y == 6) || (curr_x == 6 && curr_y == 1)) 
 	{
-			score *= -3;
+		score *= -3;
 	}	
-	
+	else if (curr_x == 0 || curr_x == 7 || curr_y == 0 || curr_y == 7 ||
+	(curr_x == 2 && (curr_y != 3 && curr_y != 4)) || 
+	(curr_x == 5 && (curr_y != 3 && curr_y != 4)) || 
+	(curr_y == 2 && (curr_x != 3 && curr_x != 4)) || 
+	(curr_y == 5 && (curr_x != 3 && curr_x != 4)))
+	{
+		score *= 2;
+	}
 	delete copy_board;
 	return score;
 }
