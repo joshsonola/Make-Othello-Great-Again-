@@ -18,8 +18,8 @@ public:
     
     Move *doMove(Move *opponentsMove, int msLeft);
     
-    Move * Heuristic(std::vector<Move *> possible_moves, Side side);
-	int HeuristicValue(Move * move, Side side);
+    Move * Heuristic(std::vector<Move *> possible_moves, Side side, Board * board);
+	int HeuristicValue(Move * move, Side side, Board * board);
 	Move * MiniMax(std::vector<Move *> possible_moves);
 	int MiniMaxValue(Move * curr_move);
 
