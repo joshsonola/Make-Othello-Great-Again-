@@ -7,7 +7,7 @@
  */
 Player::Player(Side side) {
     // Will be set to true in test_minimax.cpp.
-    testingMinimax = false;
+    testingMinimax = true;
 
     /* 
      * TODO: Do any initialization you need to do here (setting up the board,
@@ -44,7 +44,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
      * TODO: Implement how moves your AI should play here. You should first
      * process the opponent's opponents move before calculating your own move
      */ 
-     
+    
     // Obtain the opponents side
     Side other = (curr_side == BLACK) ? WHITE : BLACK;
     // Update the board with the opponent's move
@@ -64,31 +64,36 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
 			}       
 		}
 	}	
+	Move * final_move;
     if (testingMinimax) {
-		unsigned int min_index = 0;
-		int min_score = MiniMax(possible_moves[0]);
-		int score;
-		for (unsigned int i = 1; i < possible_moves.size(); i++) {
-			score = MiniMax(possible_moves[i]);
-			if (score < min_score) {
-				min_index = i;
-				min_score = score;
-			}
-		}
-		curr_board->doMove(final_move, curr_side);
-		return possible_moves[min_index];
+		// Use the Minimax procedure to find a move to make
+		final_move = MiniMax(possible_moves);		
 	}
 	else {
 		// Use the Heuristic procedure to find a move to make
-		Move * final_move = Heuristic(possible_moves, curr_side);
-		
-		// Still need to delete all the moves in possible_moves vector
-		curr_board->doMove(final_move, curr_side);
-		return final_move;
+		final_move = Heuristic(possible_moves, curr_side);
 	}
+	// Delete possible_moves
+	
+	curr_board->doMove(final_move, curr_side);
+	return final_move;
 }
 
-int Player::MiniMax(Move * curr_move) {
+Move * Player::MiniMax(std::vector<Move *> possible_moves) {
+	unsigned int min_index = 0;
+	int min_score = MiniMaxValue(possible_moves[0]);
+	int score;
+	for (unsigned int i = 1; i < possible_moves.size(); i++) {
+		score = MiniMaxValue(possible_moves[i]);
+		if (score < min_score) {
+			min_index = i;
+			min_score = score;
+		}
+	}
+	return possible_moves[min_index];
+}
+
+int Player::MiniMaxValue(Move * curr_move) {
 	// Perform the move on a copy of the game board to determine the 
 	// minimax score
 	Board * copy_board = curr_board->copy();
