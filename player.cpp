@@ -47,6 +47,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
     
     // Obtain the opponents side
     Side other = (curr_side == BLACK) ? WHITE : BLACK;
+    
     // Update the board with the opponent's move
     curr_board->doMove(opponentsMove, other);
     
@@ -118,6 +119,9 @@ int Player::MiniMaxValue(Move * curr_move) {
 }
 
 Move * Player::Heuristic(std::vector<Move *> possible_moves, Side side) {
+	if (possible_moves.size() == 0) {
+		return NULL;
+	}
 	int max_score = HeuristicValue(possible_moves[0], side);
     unsigned int max_index = 0;
     int score;
