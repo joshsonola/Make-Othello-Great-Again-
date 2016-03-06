@@ -69,7 +69,12 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
 		// Use the Heuristic procedure to find a move to make
 		final_move = Heuristic(possible_moves, curr_side);
 	}
-	// Delete possible_moves
+	
+    // Delete possible_moves
+    for (unsigned int i = 0; i < possible_moves.size(); i++)
+    {
+        //delete possible_moves[i];
+    }
 	
 	curr_board->doMove(final_move, curr_side);
 	return final_move;
@@ -109,12 +114,19 @@ int Player::MiniMaxValue(Move * curr_move) {
 		}
 	}
 	Move * final_move = Heuristic(minimax_possible_moves, other);
+    
+    // Delete moves in all possible moves vector
+    for (unsigned int i = 0; i < minimax_possible_moves.size(); i++)
+    {
+        //delete minimax_possible_moves[i];
+    }
+
 	delete copy_board;
 	return HeuristicValue(final_move, other);
 }
 
 Move * Player::Heuristic(std::vector<Move *> possible_moves, Side side) {
-	if (possible_moves.size() == 0) {
+    if (possible_moves.size() == 0) {
 		return NULL;
 	}
 	int max_score = HeuristicValue(possible_moves[0], side);
