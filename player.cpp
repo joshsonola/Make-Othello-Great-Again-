@@ -53,22 +53,34 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
     // If there are no possible moves, return NULL
     if (!curr_board->hasMoves(curr_side))
 		return NULL;
-    if (testingMinimax) {
 		
-	}
-	else {
-		// Obtain a vector of all possible moves
-		std::vector<Move *> possible_moves;
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++) {
-				Move move(i, j);
-				if (curr_board->checkMove(&move, curr_side)) {
-					possible_moves.push_back(new Move(i, j));
-				}       
+	// Obtain a vector of all possible moves
+	std::vector<Move *> possible_moves;
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 8; j++) {
+			Move move(i, j);
+			if (curr_board->checkMove(&move, curr_side)) {
+				possible_moves.push_back(new Move(i, j));
+			}       
+		}
+	}	
+    if (testingMinimax) {
+		unsigned int min_index = 0;
+		int min_score = MiniMax(possible_moves[0]);
+		int score;
+		for (unsigned int i = 1; i < possible_moves.size(); i++) {
+			score = MiniMax(possible_moves[i]);
+			if (score < min_score) {
+				min_index = i;
+				min_score = score;
 			}
 		}
+		curr_board->doMove(final_move, curr_side);
+		return possible_moves[min_index];
+	}
+	else {
 		// Use the Heuristic procedure to find a move to make
-		Move * final_move = Heuristic(possible_moves);
+		Move * final_move = Heuristic(possible_moves, curr_side);
 		
 		// Still need to delete all the moves in possible_moves vector
 		curr_board->doMove(final_move, curr_side);
@@ -76,31 +88,56 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
 	}
 }
 
-Move * Player::Heuristic(std::vector<Move *> possible_moves) {
-	int max_score = HeuristicValue(possible_moves[0]);
+int Player::MiniMax(Move * curr_move) {
+	// Perform the move on a copy of the game board to determine the 
+	// minimax score
+	Board * copy_board = curr_board->copy();
+	copy_board->doMove(curr_move, curr_side);
+	
+	// Obtain the opponents 
+    Side other = (curr_side == BLACK) ? WHITE : BLACK;
+    
+	// Obtain a vector of all possible moves
+	std::vector<Move *> minimax_possible_moves;
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 8; j++) {
+			Move move(i, j);
+			if (curr_board->checkMove(&move, other)) {
+				minimax_possible_moves.push_back(new Move(i, j));
+			}       
+		}
+	}
+	Move * final_move = Heuristic(minimax_possible_moves, other);
+	delete copy_board;
+	return HeuristicValue(final_move, other);
+}
+
+Move * Player::Heuristic(std::vector<Move *> possible_moves, Side side) {
+	int max_score = HeuristicValue(possible_moves[0], side);
     unsigned int max_index = 0;
     int score;
     for (unsigned int i = 1; i < possible_moves.size(); i++) {
-		score = HeuristicValue(possible_moves[i]);
+		score = HeuristicValue(possible_moves[i], side);
 		if (score > max_score) {
 			max_index = i;
+			max_score = score;
 		}
 	}
 	return possible_moves[max_index];
 }
 
-int Player::HeuristicValue(Move * curr_move) {
+int Player::HeuristicValue(Move * curr_move, Side side) {
 	// Perform the move on a copy of the game board to determine the 
 	// score
 	Board * copy_board = curr_board->copy();
 	copy_board->doMove(curr_move, curr_side);
 	
 	// Obtain the opponents side
-    Side other = (curr_side == BLACK) ? WHITE : BLACK;
+    Side other = (side == BLACK) ? WHITE : BLACK;
     
     // The score is simply the move that results in more pieces than 
     // the opponent
-	int score = copy_board->count(curr_side) - copy_board->count(other);
+	int score = copy_board->count(side) - copy_board->count(other);
 	
 	// Store variables for current moves
 	int curr_x = curr_move->getX();

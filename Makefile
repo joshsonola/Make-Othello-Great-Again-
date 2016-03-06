@@ -1,9 +1,9 @@
 CC          = g++
 CFLAGS      = -Wall -ansi -pedantic -ggdb
 OBJS        = player.o board.o
-PLAYERNAME  = player
+PLAYERNAME  = Make_Othello_Great_Again!
 
-all: $(PLAYERNAME) Make Othello Great Again!
+all: $(PLAYERNAME) testgame
 	
 $(PLAYERNAME): $(OBJS) wrapper.o
 	$(CC) -o $@ $^
