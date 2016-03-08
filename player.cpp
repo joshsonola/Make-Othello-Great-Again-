@@ -55,7 +55,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
 	}	
 	
 	Move * final_move;
-    
+
     // If there is only one possible move, then make that move
 	if (possible_moves.size() == 1) {
 		final_move = possible_moves[0];
@@ -188,7 +188,6 @@ int Player::HeuristicValue(Move * curr_move, Side side, Board * board) {
 		if ((curr_x == 0 && curr_y == 0) || (curr_x == 0 && curr_y == 7) ||
 			(curr_x == 7 && curr_y == 0) || (curr_x == 7 && curr_y == 7)) 
 		{
-			
 			score *= 3;
 		}
 		
@@ -202,12 +201,18 @@ int Player::HeuristicValue(Move * curr_move, Side side, Board * board) {
 		{
 			score *= -3;
 		}	
-		/*
-        else if (curr_x == 0 || curr_x == 7 || curr_y == 0 || curr_y == 7 ||
-		(curr_x == 2 && (curr_y != 3 && curr_y != 4)) || 
+		
+        
+        /*
+        // If it is an edge piece (other than a corner or adjacent to a corner),
+        // multiply the score by 2.
+    
+        else if (curr_x == 0 || curr_x == 7 || curr_y == 0 || curr_y == 7)
+        (curr_x == 2 && (curr_y != 3 && curr_y != 4)) || 
 		(curr_x == 5 && (curr_y != 3 && curr_y != 4)) || 
 		(curr_y == 2 && (curr_x != 3 && curr_x != 4)) || 
 		(curr_y == 5 && (curr_x != 3 && curr_x != 4)))
+        
 		{
 			score *= 2;
 		}
