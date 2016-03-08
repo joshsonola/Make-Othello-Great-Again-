@@ -203,10 +203,10 @@ int Player::HeuristicValue(Move * curr_move, Side side, Board * board) {
 		}	
 		
         
-        /*
+
         // If it is an edge piece (other than a corner or adjacent to a corner),
         // multiply the score by 2.
-    
+        /*
         else if (curr_x == 0 || curr_x == 7 || curr_y == 0 || curr_y == 7)
         (curr_x == 2 && (curr_y != 3 && curr_y != 4)) || 
 		(curr_x == 5 && (curr_y != 3 && curr_y != 4)) || 
