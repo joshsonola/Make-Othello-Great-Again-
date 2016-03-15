@@ -9,6 +9,4 @@ MiniMax together.
 
 Modifications for tournament player:
 
-Perform multiple levels of minimax
-Calculate score with weights pertaining to frontiers, stable pieces,
-and other important positions based on current board state.
+We only implemented Heuristic and MiniMax :(
